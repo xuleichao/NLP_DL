@@ -57,7 +57,24 @@ def loadLabelSet(which=0):
     print('load label finished')
     return labels
 
-if __name__=="__main__":
+#count 为batch 数量
+def next_x_y(Image, Label, count): #图像和标签的next 方法，用于feed
+    lower_shape = lambda x, y: y if x >= y else x 
+    Image_shape = Image.shape[0]
+    Label_shape = Label.shape[0]
+    lwr_num = lower_shape(Image_shape, Label_shape)
+    if lwr_num % count != 0:
+        the_count = lwr_num // count
+        print('输入的规模与所返回的规模不符，将迭代的个数为: ', the_count)
+
+    else:
+        the_count = lwr_num // count
+    for i in range(the_count):
+        b = i * count
+        e = b + count
+        yield Image[b:e], Label[b:e]
+
+if __name__!="__main__":
     imgs=loadImageSet()
     #import PlotUtil as pu
     #pu.showImgMatrix(imgs[0])
